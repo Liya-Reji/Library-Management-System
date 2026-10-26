@@ -1,7 +1,8 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const app = require('./app');
 const { testConnection } = require('../shared/db');
 const { runMigration } = require('../database/migrate');
-require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,5 +1,10 @@
+
+const path = require('path');
 const { Pool } = require('pg');
-require('dotenv').config();
+
+require('dotenv').config({
+  path: path.resolve(__dirname, '../.env')
+});
 
 let pool = null;
 
@@ -9,13 +14,15 @@ function getPool() {
   }
 
   const connectionString = process.env.DATABASE_URL;
+
   if (!connectionString) {
-    throw new Error('DATABASE_URL environment variable is not defined.');
+    throw new Error(
+      'DATABASE_URL environment variable is not defined.'
+    );
   }
 
-  const isProduction = process.env.NODE_ENV === 'production';
-  const forceSsl = process.env.DB_SSL === 'true';
-  const requiresSsl = forceSsl || (isProduction && !connectionString.includes('localhost') && !connectionString.includes('127.0.0.1'));
+  // SSL is enabled only when DB_SSL=true.
+  const requiresSsl = process.env.DB_SSL === 'true';
 
   const poolConfig = {
     connectionString,
@@ -26,20 +33,25 @@ function getPool() {
 
   if (requiresSsl) {
     poolConfig.ssl = {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
     };
+  } else {
+    poolConfig.ssl = false;
   }
 
   pool = new Pool(poolConfig);
 
   pool.on('error', (err) => {
-    console.error('Unexpected idle client error on PostgreSQL pool:', err);
+    console.error(
+      'Unexpected idle client error on PostgreSQL pool:',
+      err.message
+    );
   });
 
   return pool;
 }
 
-// Allow overriding pool (useful for tests and dependency injection)
+// Allow overriding the pool for tests and dependency injection.
 function setPool(customPool) {
   pool = customPool;
 }
@@ -56,10 +68,26 @@ async function getClient() {
 
 async function testConnection() {
   try {
-    const res = await query('SELECT NOW() as current_time');
-    return { success: true, timestamp: res.rows[0].current_time };
+    const res = await query('SELECT NOW() AS current_time');
+
+    return {
+      success: true,
+      timestamp: res.rows[0].current_time,
+    };
   } catch (error) {
-    return { success: false, error: error.message };
+    const msg =
+      error.message ||
+      (error.errors &&
+        error.errors
+          .map((e) => e.message || e.code)
+          .join('; ')) ||
+      error.code ||
+      String(error);
+
+    return {
+      success: false,
+      error: msg,
+    };
   }
 }
 
@@ -76,5 +104,5 @@ module.exports = {
   query,
   getClient,
   testConnection,
-  closePool
+  closePool,
 };
