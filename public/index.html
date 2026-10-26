@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <i class="bi bi-journal-bookmark-fill fs-3 me-2"></i>
+        <span>Library Management System</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center" id="navbarLinks">
+          <!-- Injected dynamically by auth.js -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="container text-center">
+      <h1 class="display-5 fw-bold mb-3">Welcome to the College Library</h1>
+      <p class="lead mb-4 col-lg-8 mx-auto">
+        Discover academic books, browse our complete catalogue, and manage student borrowings with full Docker, Kubernetes, and Netlify support.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="books.html" class="btn btn-light btn-lg px-4 fw-semibold text-primary">
+          <i class="bi bi-search me-1"></i> Browse Catalogue
+        </a>
+        <a href="register.html" class="btn btn-outline-light btn-lg px-4">
+          <i class="bi bi-person-plus me-1"></i> Student Sign Up
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container my-4">
+    <!-- Live Library Statistics -->
+    <div class="row g-4 mb-5" id="statsRow">
+      <div class="col-md-4">
+        <div class="card stat-card card-hover border-start border-primary border-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="stat-label">Total Titles</div>
+              <div class="stat-value text-primary" id="totalTitles">--</div>
+            </div>
+            <i class="bi bi-book-half stat-icon text-primary"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card card-hover border-start border-success border-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="stat-label">Available Copies</div>
+              <div class="stat-value text-success" id="availableCopies">--</div>
+            </div>
+            <i class="bi bi-check-circle-fill stat-icon text-success"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card card-hover border-start border-info border-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="stat-label">Total Collection</div>
+              <div class="stat-value text-info" id="totalCopies">--</div>
+            </div>
+            <i class="bi bi-collection-fill stat-icon text-info"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Search Widget -->
+    <div class="card p-4 mb-5 shadow-sm">
+      <div class="row align-items-center">
+        <div class="col-lg-8 mb-3 mb-lg-0">
+          <h4 class="mb-1"><i class="bi bi-search text-primary me-2"></i>Looking for a specific book?</h4>
+          <p class="text-muted mb-0">Search through titles, authors, categories, or ISBN numbers instantly.</p>
+        </div>
+        <div class="col-lg-4">
+          <form id="quickSearchForm" class="d-flex" onsubmit="event.preventDefault(); handleQuickSearch();">
+            <input type="text" id="quickSearchInput" class="form-control me-2" placeholder="e.g. Algorithms, Martin...">
+            <button class="btn btn-primary px-3" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Feature Cards -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card h-100 card-hover p-4 text-center">
+          <div class="mb-3">
+            <span class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 64px; height: 64px;">
+              <i class="bi bi-journal-richtext fs-2"></i>
+            </span>
+          </div>
+          <h5 class="fw-bold">Public Catalogue</h5>
+          <p class="text-muted">
+            Students and visitors can freely browse and search available book titles, categories, and copy counts without logging in.
+          </p>
+          <div class="mt-auto">
+            <a href="books.html" class="btn btn-sm btn-outline-primary">Explore Books &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 card-hover p-4 text-center">
+          <div class="mb-3">
+            <span class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 text-success rounded-circle" style="width: 64px; height: 64px;">
+              <i class="bi bi-person-workspace fs-2"></i>
+            </span>
+          </div>
+          <h5 class="fw-bold">Student Portal</h5>
+          <p class="text-muted">
+            Registered students can log in to inspect their actively issued books, track due dates, and view historical loan records.
+          </p>
+          <div class="mt-auto">
+            <a href="login.html" class="btn btn-sm btn-outline-success">Student Login &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 card-hover p-4 text-center">
+          <div class="mb-3">
+            <span class="d-inline-flex align-items-center justify-content-center bg-warning bg-opacity-10 text-warning rounded-circle" style="width: 64px; height: 64px;">
+              <i class="bi bi-shield-lock-fill fs-2"></i>
+            </span>
+          </div>
+          <h5 class="fw-bold">Administrator Desk</h5>
+          <p class="text-muted">
+            Librarians can add/edit book records, issue available copies safely with transactional integrity, and record book returns.
+          </p>
+          <div class="mt-auto">
+            <a href="login.html" class="btn btn-sm btn-outline-warning text-dark">Staff Access &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Microproject Architecture Summary -->
+    <div class="card p-4 bg-light border-0">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+          <h6 class="fw-bold mb-1"><i class="bi bi-cpu me-2"></i>Architecture &amp; DevOps Stack</h6>
+          <p class="small text-muted mb-0">Built with Node.js/Express, PostgreSQL, Docker Compose, Minikube Kubernetes, and Netlify Serverless.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="badge bg-secondary">Docker</span>
+          <span class="badge bg-secondary">Kubernetes</span>
+          <span class="badge bg-secondary">Netlify Functions</span>
+          <span class="badge bg-secondary">PostgreSQL</span>
+          <span class="badge bg-secondary">Bootstrap 5</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 mt-auto">
+    <div class="container text-center text-muted small">
+      <p class="mb-1">College Microproject &mdash; Library Management System</p>
+      <p class="mb-0">Designed for Docker, Kubernetes, and Netlify Serverless Deployments</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    async function loadStats() {
+      try {
+        const response = await API.get('/stats');
+        if (response && response.data) {
+          document.getElementById('totalTitles').textContent = response.data.total_titles || 0;
+          document.getElementById('availableCopies').textContent = response.data.available_copies || 0;
+          document.getElementById('totalCopies').textContent = response.data.total_copies || 0;
+        }
+      } catch (err) {
+        console.warn('Could not load statistics:', err.message);
+        document.getElementById('totalTitles').textContent = 'N/A';
+        document.getElementById('availableCopies').textContent = 'N/A';
+        document.getElementById('totalCopies').textContent = 'N/A';
+      }
+    }
+
+    function handleQuickSearch() {
+      const q = document.getElementById('quickSearchInput').value.trim();
+      if (q) {
+        window.location.href = `books.html?search=${encodeURIComponent(q)}`;
+      } else {
+        window.location.href = 'books.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStats);
+  </script>
+</body>
+</html>

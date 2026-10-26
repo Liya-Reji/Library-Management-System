@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+tests/
+coverage/
+.vscode
+.idea
+*.md
+docker-compose*.yml
+k8s/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lms_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-lms_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-lms_secure_pass_123}
+      POSTGRES_DB: ${DB_NAME:-library_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-lms_user} -d ${DB_NAME:-library_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lms_application
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://${DB_USER:-lms_user}:${DB_PASSWORD:-lms_secure_pass_123}@postgres:5432/${DB_NAME:-library_db}
+      JWT_SECRET: ${JWT_SECRET:-college_microproject_secret_key_change_me_9988}
+      JWT_EXPIRES_IN: 24h
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
